@@ -2,6 +2,7 @@ package com.learning.ticketing.user;
 
 
 import com.learning.ticketing.role.Role;
+import com.learning.ticketing.ticket.Ticket;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,11 +50,11 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
 
-//    @OneToMany(mappedBy = "owner")
-//    private List<Book> books;
+    @OneToMany(mappedBy = "petitioner")
+    private List<Ticket> petitionedTickets;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<BookTransactionHistory> histories;
+    @OneToMany(mappedBy = "receiver")
+    private List<Ticket> receivedTickets;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
