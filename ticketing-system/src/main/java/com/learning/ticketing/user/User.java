@@ -1,9 +1,8 @@
 package com.learning.ticketing.user;
 
-
-import com.learning.ticketing.role.Role;
 import com.learning.ticketing.ticket.Ticket;
 import jakarta.persistence.*;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +21,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
@@ -47,8 +44,10 @@ public class User implements UserDetails, Principal {
     private boolean accountLocked;
     private boolean enabled;
 
-    @ManyToMany(fetch = EAGER)
-    private List<Role> roles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "ROLES", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "petitioner")
     private List<Ticket> petitionedTickets;
@@ -68,7 +67,7 @@ public class User implements UserDetails, Principal {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
                 .stream()
-                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                .map(r -> new SimpleGrantedAuthority(r.name()))
                 .collect(Collectors.toList());
     }
 
