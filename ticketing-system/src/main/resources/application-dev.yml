@@ -1,18 +1,24 @@
 spring:
+  h2:
+    console:
+      enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/MyTicket
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+#    url: jdbc:postgresql://localhost:5432/MyTicket
+#    driver-class-name: org.postgresql.Driver
     username: username
     password: password
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
   mail:
     host: localhost
     port: 1025
