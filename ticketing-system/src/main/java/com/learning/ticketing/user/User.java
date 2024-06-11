@@ -1,26 +1,34 @@
 package com.learning.ticketing.user;
 
+import com.learning.ticketing.common.BaseEntity;
 import com.learning.ticketing.ticket.Ticket;
-import jakarta.persistence.*;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.security.Principal;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -30,11 +38,9 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "USERS")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal {
+@SequenceGenerator(name = "idGenerator", sequenceName = "user_sequence", initialValue = 1, allocationSize = 1)
+public class User extends BaseEntity implements UserDetails, Principal {
 
-    @Id
-    @GeneratedValue
-    private Integer id;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;
@@ -55,20 +61,12 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "receiver")
     private List<Ticket> receivedTickets;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    @Column(insertable = false)
-    private LocalDateTime lastModifiedDate;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
                 .stream()
                 .map(r -> new SimpleGrantedAuthority(r.name()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Setter
@@ -16,6 +19,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+@SequenceGenerator(name = "idGenerator", sequenceName = "ticket_sequence", initialValue = 1, allocationSize = 1)
 public class Ticket extends BaseEntity {
 
     private String subject;
@@ -36,6 +41,12 @@ public class Ticket extends BaseEntity {
     @JoinColumn(name="receiver_id")
     private User receiver;
 
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Integer createdBy;
 
+    @LastModifiedBy
+    @Column(insertable = false)
+    private Integer lastModifiedBy;
 
 }
