@@ -8,7 +8,8 @@ import Paper from "@mui/material/Paper";
 import { useUsers } from "./UsersContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Fab, Stack } from "@mui/material";
 
 export default function BasicTable() {
   const { users, deleteUser } = useUsers();
@@ -33,7 +34,26 @@ export default function BasicTable() {
             <TableCell align="center">Email</TableCell>
             <TableCell align="center">Roles</TableCell>
             <TableCell align="center">Tickets&nbsp;(IDs)</TableCell>
-            <TableCell align="center">Actions</TableCell>
+            {/* <TableCell align="center">
+              Actions
+            </TableCell> */}
+            <TableCell align="center">
+              <Fab 
+                variant="extended"
+                key={"add"}
+                onClick={() => handleAdd(user.id)}
+                aria-label="add"
+                color="success"
+                // size="small"
+                size="medium"
+                sx={{
+                  borderRadius: 5,
+                }}
+              >
+                Add
+                <AddIcon />
+              </Fab>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -52,25 +72,27 @@ export default function BasicTable() {
               <TableCell align="center">
                 {user.petitionedTickets.map((i) => i + " ")}
               </TableCell>
-              <TableCell align="center">
-                <Fab
-                  key={"edit"}
-                  onClick={() => handleEdit(user.id)}
-                  aria-label="edit"
-                  color="warning"
-                  size="small"
-                >
-                  <EditIcon />
-                </Fab>
-                <Fab
-                  key={"delete"}
-                  onClick={() => handleDelete(user.id)}
-                  aria-label="edit"
-                  color="error"
-                  size="small"
-                >
-                  <DeleteIcon />
-                </Fab>
+              <TableCell align="center" >
+                <Stack direction={"row"} spacing={1} justifyContent="center">
+                  <Fab
+                    key={"edit"}
+                    onClick={() => handleEdit(user.id)}
+                    aria-label="edit"
+                    color="warning"
+                    size="small"
+                  >
+                    <EditIcon />
+                  </Fab>
+                  <Fab
+                    key={"delete"}
+                    onClick={() => handleDelete(user.id)}
+                    aria-label="edit"
+                    color="error"
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </Fab>  
+                </Stack>
               </TableCell>
             </TableRow>
           ))}
